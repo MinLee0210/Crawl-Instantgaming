@@ -3,7 +3,6 @@
 import re
 import requests 
 import time
-from tqdm import tqdm
 
 from bs4 import BeautifulSoup
 
@@ -32,7 +31,7 @@ BASE_URL = "https://www.instant-gaming.com/en/"
 def get_game_url(start:int=1, end:int=141): 
     game_urls = []
 
-    for page in tqdm(range(start, end)): 
+    for page in range(start, end): 
         # This is the trending page of instant-gaming
         URL = f"https://www.instant-gaming.com/en/search/?gametype=trending&version=2&page={page}" 
         resource = requests.get(url=URL,

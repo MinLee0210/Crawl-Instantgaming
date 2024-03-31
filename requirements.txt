@@ -3,4 +3,3 @@ chromedriver_autoinstaller==0.6.4
 pandas==2.2.1
 Requests==2.31.0
 selenium==4.19.0
-tqdm==4.66.2
