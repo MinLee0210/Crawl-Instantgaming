@@ -3,7 +3,6 @@ import logging
 import yaml
 import time                                                
 
-
 def dir_exist(dir, create:bool=True) -> bool: 
     existence = os.path.exists(dir)
     if existence ==False and create == True: 
