@@ -1,4 +1,7 @@
 /configs/*
+/engine/g_drive.py
+/data/img/*
+/data/gaming_content.csv
 
 # Byte-compiled / optimized / DLL files
 **/__pycache__/

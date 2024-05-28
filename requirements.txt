@@ -1,7 +1,0 @@
-beautifulsoup4==4.12.3
-chromedriver_autoinstaller==0.6.4
-fastapi==0.110.1
-pandas==2.2.1
-Requests==2.31.0
-selenium==4.19.0
-uvicorn==0.29.0

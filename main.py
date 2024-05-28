@@ -2,26 +2,19 @@ __author__= "OctoOpt"
 __version__ = "0.0.0"
 
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import asyncio
 from datetime import datetime, date
 
-from engine.crawler import get_game_url, get_game_card
+from engine.crawler import get_game_url, get_game_card, download_image
 from engine.utils import yaml_read, set_logger
 import logging
 
 config = yaml_read(filename="./configs/config.yaml")
-# set_logger()
+set_logger()
 
-# logging.basicConfig(level=logging.INFO, 
-#                     filename=f'log/app.log',
-#                     filemode='w',
-#                     format='%(asctime)s - %(levelname)s - %(message)s',
-#                     datefmt='%d-%b-%y %H:%M:%S')
 
 def crawling():
     try:
-        set_logger()
         # Start
         logging.info("Started crawling {}...". format(datetime.now()))
 
@@ -29,10 +22,12 @@ def crawling():
         game_urls = get_game_url(start=config["pages"][0], 
                                 end=config["pages"][1])
 
-        count = 0 # Just for checking how many games at each moment processing
+        count = 0 
         for url in game_urls: 
             card = get_game_card(url, 
                                 count=count)
+            image = download_image(image_url=card["image_url"], 
+                                   image_name=card["name"])
             count += 1
         # End
         logging.info("Finished crawling {}...".format(datetime.now()))
@@ -51,13 +46,8 @@ if __name__ == "__main__":
     print("********** START THE PROCESS **********")
     print(logo)
     print("***************************************")
-    scheduler = AsyncIOScheduler()
-    # Add task to crawl per hour between 7a.m to 7p.m
-    # scheduler.add_job(func=crawling, trigger='cron', hour='7-19')
     crawling()
 
-    # Start process
-    # scheduler.start()
     print('Press Ctrl+C to exit')
 
     # Execution will block here until Ctrl+C (Ctrl+Break on Windows) is pressed.

@@ -1,5 +1,5 @@
 # Crawling https://www.instant-gaming.com/en/
-import re, json
+import re, os
 import requests
 import time, logging
 
@@ -8,7 +8,9 @@ from bs4 import BeautifulSoup
 import chromedriver_autoinstaller
 from selenium import webdriver
 
-from .utils import write_data, set_logger
+from .utils import write_data, set_logger, dir_exist
+from .model import GameCard
+
 set_logger()
 
 # Set up on google colab follows this link: https://github.com/googlecolab/colabtools/issues/3347
@@ -25,10 +27,13 @@ options.add_argument("--disable-gpu"); #https://stackoverflow.com/questions/5195
 
 
 # set path to chromedriver as per your configuration
-chromedriver_autoinstaller.install(path="./engine")
+# chromedriver_autoinstaller.install(path="./engine")
 
 
-headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"} 
+headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+           "Accept-Language": "en-US,en;q=0.9"} 
+
 BASE_URL = "https://www.instant-gaming.com/en/"
 
 def get_game_url(start:int=1, end:int=141): 
@@ -73,12 +78,12 @@ def get_page_content(url):
     return bs4_obj
 
 
-def get_game_card(url, count:int=0, dir:str="./log/data.txt"):
+def get_game_card(url, count:int=0, dir:str="./data/instant_gaming.txt"):
     try:
-        logging.info(msg=f"Running get_game_card at {url} - No.{count}")
         soup = get_page_content(url)
         game_name = soup.find('h1', 'game-title').text
-        img_url = soup.find('img', attrs={'alt': game_name})['src']
+        img_url = soup.find('img', attrs={'alt': game_name, 
+                                          'loading': 'lazy'})['src']
         description = soup.find('span', attrs={'itemprop': 'description'}).text
         categories = []
         for cat in soup.find_all('a', attrs={'itemprop': 'applicationSubCategory'}):
@@ -90,10 +95,29 @@ def get_game_card(url, count:int=0, dir:str="./log/data.txt"):
                     'img_url': img_url,
                     'categories': categories}
         
-        log_data = f'Successfully processing {url}'
-        write_data(dir=dir, content=json.dumps(game_card))
-        # return game_card
+        game_data = GameCard.to_str(game_card)
+        log_data = f"Successfully processing get_game_card at {url} - No.{count}"
+        logging.info(msg=log_data, exc_info=True)
+        write_data(dir=dir, content=game_data)
+        return game_card
     except Exception as e:
         log_data = f'Fail to prorcess {url} - Details: {e}'
         logging.error(log_data, exc_info=True)
-        # return None
+        return None
+
+def download_image(image_url, image_name, headers=headers, save_dir:str='./data/imgs') -> bool: 
+    try: 
+        img_data = requests.get(url=image_url, headers=headers).content
+        image_name = '-'.join(image_name.strip().lowercase().split())
+        if dir_exist(save_dir, create=True): 
+            image_name = image_name + ".png"
+            img_dir = os.path.join(save_dir, image_name)
+            with open(img_dir, 'wb') as img_handler: 
+                img_handler.write(img_data)
+        log_data = f"Successfully processing download_image at {image_url}  - Save at {save_dir}"
+        logging.info(msg=log_data, exc_info=True)
+        return True
+    except Exception as e: 
+        log_data = f'Fail to prorcess {image_url} - Details: {e}'
+        logging.error(log_data, exc_info=True)
+        return False

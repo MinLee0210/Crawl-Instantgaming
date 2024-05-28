@@ -1,8 +1,17 @@
 import os
 import logging
-import json, yaml
-from datetime import datetime, date
+import yaml
+import time                                                
 
+
+def dir_exist(dir, create:bool=True) -> bool: 
+    existence = os.path.exists(dir)
+    if existence ==False and create == True: 
+        os.mkdir(dir)
+        existence = True
+    return existence
+
+# ===== READ DATA FORMAT =====
 def yaml_read(filename): 
     if '.yaml' not in filename: 
         raise "Invalid format"
@@ -14,6 +23,8 @@ def write_data(dir, content):
     with open(dir, 'a') as f: 
         f.writelines(content + '\n')
 
+
+# ===== LOGGING SYSTEM =====
 def set_logger(filename:str='./log/app.log'): 
     # Create an empty log file if not exist
     if not os.path.exists(filename):
@@ -28,3 +39,13 @@ def set_logger(filename:str='./log/app.log'):
                         filename=filename, 
                         filemode='w'
                         )
+
+# ===== SOME DECORATOR =====
+def timer_func(func): 
+    def wrap_func(*args, **kwargs): 
+        t1 = time() 
+        result = func(*args, **kwargs) 
+        t2 = time() 
+        print(f'Function {func.__name__!r} executed in {(t2-t1):.4f}s') 
+        return result 
+    return wrap_func 
