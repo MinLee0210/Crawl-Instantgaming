@@ -1,8 +1,11 @@
-import os
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-class-docstring
+# pylint: disable=missing-function-docstring
+# pylint: disable=missing-final-newline
 
 from pydantic import BaseModel
 
-class GameCard(BaseModel): 
+class GameCard(BaseModel):
     name: str
     game_url: str
     description: str
@@ -10,13 +13,13 @@ class GameCard(BaseModel):
     categories: list[str]
 
     @staticmethod
-    def to_str(content:dict) -> str: 
+    def to_str(content:dict) -> str:
         game_card = GameCard(**content)
         categories = ','.join(game_card.categories)
-        result = "::".join([game_card.name, game_card.game_url, game_card.description, 
+        result = "::".join([game_card.name, game_card.game_url, game_card.description,
                             game_card.img_url, categories])
         return result
-    
-class LocalGameData(BaseModel): 
+
+class LocalGameData(BaseModel):
     data_dir: str
     image_dir: str

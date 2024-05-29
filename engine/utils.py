@@ -1,50 +1,44 @@
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-function-docstring
+# pylint: disable=raising-bad-type
+# pylint: disable=missing-final-newline
+
 import os
 import logging
+import time
 import yaml
-import time                                                
 
-def dir_exist(dir, create:bool=True) -> bool: 
+def dir_exist(dir, create:bool=True) -> bool:
     existence = os.path.exists(dir)
-    if existence ==False and create == True: 
+    if existence is False and create is True:
         os.mkdir(dir)
         existence = True
     return existence
 
 # ===== READ DATA FORMAT =====
-def yaml_read(filename): 
-    if '.yaml' not in filename: 
+def yaml_read(filename):
+    if '.yaml' not in filename:
         raise "Invalid format"
     with open(filename) as f:
         my_dict = yaml.safe_load(f)
     return my_dict
-    
-def write_data(dir, content): 
-    with open(dir, 'a') as f: 
+
+def write_data(dir, content):
+    with open(dir, 'a') as f:
         f.writelines(content + '\n')
 
-
 # ===== LOGGING SYSTEM =====
-def set_logger(filename:str='./log/app.log'): 
+def set_logger(filename:str='./log/app.log'):
     # Create an empty log file if not exist
     if not os.path.exists(filename):
-        open(filename, 'a')
+        os.mkdir(filename)
     else:
         pass
     # Set logging config
     logging.basicConfig(
-                        level=logging.DEBUG, 
+                        level=logging.DEBUG,
                         format='[%(asctime)s] - %(levelname)7s --- %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S', 
-                        filename=filename, 
+                        datefmt='%Y-%m-%d %H:%M:%S',
+                        filename=filename,
                         filemode='w'
                         )
-
-# ===== SOME DECORATOR =====
-def timer_func(func): 
-    def wrap_func(*args, **kwargs): 
-        t1 = time() 
-        result = func(*args, **kwargs) 
-        t2 = time() 
-        print(f'Function {func.__name__!r} executed in {(t2-t1):.4f}s') 
-        return result 
-    return wrap_func 

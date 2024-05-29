@@ -1,0 +1,9 @@
+data_dir: ./data
+log_dir: ./log
+dataset_name: instant_gaming.txt
+pages: [1, 141] # [start, end]
+
+google_credential_dir: ./configs/credential.json
+google_drive_image_id: 18FG8-QraKpxhOZtWVG1iPKgaN5NLFwBd
+google_drive_data_id: 1k4FUS_Waco_mDYAgavjFla2GJNrHuSdS
+google_service_account: octoopt-crawler@llm-based-app.iam.gserviceaccount.com

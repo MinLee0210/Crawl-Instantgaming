@@ -1,8 +1,5 @@
-/configs/credential.json
+/configs/*
 /data/img/*
-
-# Chrome-driver setup
-/124            
 
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
@@ -54,3 +51,6 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+LICENSE
+README.md
