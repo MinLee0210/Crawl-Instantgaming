@@ -59,4 +59,3 @@ As an AI enthusiast, I believe the data can be used to:
 ## Reference
 
 1. https://medium.com/kariyertech/web-crawling-general-perspective-713971e9c659
-2. https://medium.com/kariyertech/web-crawling-general-perspective-713971e9c659 
